@@ -9,6 +9,7 @@ import org.springframework.social.twitter.api.Tweet;
 
 public class LogStreamListener implements StreamListener {
     private static final Logger log = LoggerFactory.getLogger(LogStreamListener.class);
+
     @Override
     public void onTweet(Tweet tweet) {
         log.info("New Tweet: {}", tweet.getText());

@@ -6,5 +6,9 @@
 <body>
 <h3>Streaming with filter: <span th:text="${filter}"></span>!</h3>
 
+<ul>
+    <li th:each="tweet:${tweets}" th:text="${tweet.text}">Friend</li>
+</ul>
+
 </body>
 </html>
