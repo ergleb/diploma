@@ -2,6 +2,7 @@ package com.ergleb.twitterpredictions.services;
 
 import com.ergleb.twitterpredictions.streamlisteners.ListStreamListener;
 import com.ergleb.twitterpredictions.streamlisteners.LogStreamListener;
+import com.ergleb.twitterpredictions.streamlisteners.SentimentStreamListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.connect.ConnectionRepository;
@@ -22,8 +23,9 @@ public class StreamingService {
 
         if (!listenersMap.containsKey(filterWords)) {
             List<StreamListener> streamListeners = new ArrayList<>();
-            streamListeners.add(new LogStreamListener());
+            //streamListeners.add(new LogStreamListener());
             streamListeners.add(new ListStreamListener(10));
+            streamListeners.add(new SentimentStreamListener());
             twitter.streamingOperations().filter(filterWords, streamListeners);
             listenersMap.put(filterWords, streamListeners);
             return streamListeners;
