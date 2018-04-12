@@ -14,7 +14,7 @@ public class SentimentStreamListener implements StreamListener {
     @Override
     public void onTweet(Tweet tweet) {
         try {
-            log.info("Tweet: {}", tweet.getText());
+            log.info("MongoTweet: {}", tweet.getText());
             SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer(tweet.getText());
             sentimentAnalyzer.analyze();
             log.info("polarity: {}", sentimentAnalyzer.getPolarity());

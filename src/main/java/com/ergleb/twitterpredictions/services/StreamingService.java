@@ -26,6 +26,7 @@ public class StreamingService {
             //streamListeners.add(new LogStreamListener());
             streamListeners.add(new ListStreamListener(10));
             streamListeners.add(new SentimentStreamListener());
+
             twitter.streamingOperations().filter(filterWords, streamListeners);
             listenersMap.put(filterWords, streamListeners);
             return streamListeners;

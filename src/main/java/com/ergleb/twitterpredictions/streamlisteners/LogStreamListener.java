@@ -12,7 +12,7 @@ public class LogStreamListener implements StreamListener {
 
     @Override
     public void onTweet(Tweet tweet) {
-        log.info("New Tweet: {}", tweet.getText());
+        log.info("New MongoTweet: {}", tweet.getText());
     }
 
     @Override
