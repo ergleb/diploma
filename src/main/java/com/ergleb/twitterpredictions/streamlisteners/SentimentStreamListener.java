@@ -27,17 +27,14 @@ public class SentimentStreamListener implements StreamListener {
     @Setter
     private Map<Tweet, Map<String, Float>> tweets = new HashMap<>();
 
+    private SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
+
     @Override
     public void onTweet(Tweet tweet) {
-        try {
-            SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer(tweet.getText());
-            sentimentAnalyzer.analyze();
-            tweets.put(tweet, sentimentAnalyzer.getPolarity());
-        } catch (IOException ex) {
-            log.error("Error while creating sentimentAnalyzer object");
-        } catch (NullPointerException ex) {
-            log.error("NPE: {}", Arrays.asList(ex.getStackTrace()));
-        }
+
+        sentimentAnalyzer.setInputString(tweet.getText());
+        sentimentAnalyzer.analyze();
+        tweets.put(tweet, sentimentAnalyzer.getPolarity());
 
     }
 
@@ -57,7 +54,7 @@ public class SentimentStreamListener implements StreamListener {
     }
 
     @Scheduled(fixedDelay = 10000L)
-    private void cleanTweets () {
+    private void cleanTweets() {
         log.info("Scheduled op, tweets with polarity: {}", tweets);
         tweets = new HashMap<>();
     }
