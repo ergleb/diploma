@@ -12,7 +12,7 @@ public class AnalyzedTweet {
     @Id
     private String id;
 
-    private Tweet tweet;
+    private MongoTweet tweet;
     private double positive;
     private double negative;
     private double neutral;
