@@ -1,23 +1,16 @@
 package com.ergleb.twitterpredictions.streamlisteners;
 
-import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
 import com.vader.sentiment.analyzer.SentimentAnalyzer;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.twitter.api.StreamDeleteEvent;
 import org.springframework.social.twitter.api.StreamListener;
 import org.springframework.social.twitter.api.StreamWarningEvent;
 import org.springframework.social.twitter.api.Tweet;
 
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
