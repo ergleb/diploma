@@ -4,6 +4,8 @@ import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
 import com.ergleb.twitterpredictions.streamlisteners.ListStreamListener;
 import com.ergleb.twitterpredictions.streamlisteners.LogStreamListener;
 import com.ergleb.twitterpredictions.streamlisteners.SentimentStreamListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.connect.ConnectionRepository;
@@ -26,12 +28,11 @@ public class StreamingService {
 
         if (!listenersMap.containsKey(filterWords)) {
             List<StreamListener> streamListeners = new ArrayList<>();
-            //streamListeners.add(new LogStreamListener());
-            streamListeners.add(new ListStreamListener(10));
-            SentimentStreamListener sentimentStreamListener = new SentimentStreamListener();
-            twitterScheduler.setStreamListener(sentimentStreamListener);
+            SentimentStreamListener sentimentStreamListener = new SentimentStreamListener(twitterScheduler);
             streamListeners.add(sentimentStreamListener);
-
+            streamListeners.add(new ListStreamListener(10));
+            //streamListeners.add(new LogStreamListener());
+            log.info("SentimentSL: {}", sentimentStreamListener);
             twitter.streamingOperations().filter(filterWords, streamListeners);
             listenersMap.put(filterWords, streamListeners);
             return streamListeners;
@@ -57,5 +58,7 @@ public class StreamingService {
         this.twitter = twitter;
         this.twitterScheduler = twitterScheduler;
     }
+
+    public static final Logger log = LoggerFactory.getLogger(StreamingService.class);
 
 }

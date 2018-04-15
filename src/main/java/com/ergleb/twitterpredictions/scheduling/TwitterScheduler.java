@@ -2,7 +2,6 @@ package com.ergleb.twitterpredictions.scheduling;
 
 import com.ergleb.twitterpredictions.database.mongo.entity.AnalyzedTweet;
 import com.ergleb.twitterpredictions.database.mongo.repository.AnalyzedTweetRepository;
-import com.ergleb.twitterpredictions.streamlisteners.SentimentStreamListener;
 import com.vader.sentiment.util.ScoreType;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,34 +25,30 @@ public class TwitterScheduler {
     private static final Logger log = LoggerFactory.getLogger(TwitterScheduler.class);
 
     @Inject
-    public  TwitterScheduler(AnalyzedTweetRepository analyzedTweetRepository) {
+    public TwitterScheduler(AnalyzedTweetRepository analyzedTweetRepository) {
         this.analyzedTweetRepository = analyzedTweetRepository;
     }
 
     private AnalyzedTweetRepository analyzedTweetRepository;
 
-    private SentimentStreamListener streamListener;
+    @Getter
+    private Map<Tweet, Map<String, Float>> tweets = new HashMap<>();
 
     @Scheduled(fixedDelay = 5000L)
     private void cleanTweets() {
-        if (streamListener != null) {
-            Map<Tweet, Map<String, Float>> tweetsWithPolarity = streamListener.getTweets();
-            log.info("Scheduled op, tweets with polarity: {}", tweetsWithPolarity);
-            List<AnalyzedTweet> analyzedTweets = tweetsWithPolarity.entrySet().stream().map(x -> {
-                AnalyzedTweet analyzedTweet = new AnalyzedTweet();
-                analyzedTweet.setTweet(x.getKey());
-                Map<String, Float> polarity = x.getValue();
-                analyzedTweet.setPositive(polarity.get(ScoreType.POSITIVE));
-                analyzedTweet.setNegative(polarity.get(ScoreType.NEGATIVE));
-                analyzedTweet.setCompound(polarity.get(ScoreType.COMPOUND));
-                analyzedTweet.setNeutral(polarity.get(ScoreType.NEUTRAL));
-                return analyzedTweet;
-            }).collect(Collectors.toList());
-            log.info("Analyzed tweet list: {}", analyzedTweets);
-            analyzedTweetRepository.insert(analyzedTweets);
-            streamListener.setTweets(new HashMap<>());
-        } else {
-            log.info("StreamListener is null");
-        }
+        log.info("Scheduled op, tweets with polarity: {}", tweets);
+        List<AnalyzedTweet> analyzedTweets = tweets.entrySet().stream().map(x -> {
+            AnalyzedTweet analyzedTweet = new AnalyzedTweet();
+            analyzedTweet.setTweet(x.getKey());
+            Map<String, Float> polarity = x.getValue();
+            analyzedTweet.setPositive(polarity.get(ScoreType.POSITIVE));
+            analyzedTweet.setNegative(polarity.get(ScoreType.NEGATIVE));
+            analyzedTweet.setCompound(polarity.get(ScoreType.COMPOUND));
+            analyzedTweet.setNeutral(polarity.get(ScoreType.NEUTRAL));
+            return analyzedTweet;
+        }).collect(Collectors.toList());
+        log.info("Analyzed tweet list: {}", analyzedTweets);
+        analyzedTweetRepository.insert(analyzedTweets);
+        tweets = new HashMap<>();
     }
 }

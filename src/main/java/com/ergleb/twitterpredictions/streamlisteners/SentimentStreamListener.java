@@ -1,5 +1,7 @@
 package com.ergleb.twitterpredictions.streamlisteners;
 
+import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
+import com.ergleb.twitterpredictions.services.StreamingService;
 import com.vader.sentiment.analyzer.SentimentAnalyzer;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import org.springframework.social.twitter.api.StreamListener;
 import org.springframework.social.twitter.api.StreamWarningEvent;
 import org.springframework.social.twitter.api.Tweet;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,12 +25,28 @@ public class SentimentStreamListener implements StreamListener {
 
     private SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
 
+    private TwitterScheduler twitterScheduler;
+
+    @Inject
+    public SentimentStreamListener (TwitterScheduler twitterScheduler) {
+        this.twitterScheduler = twitterScheduler;
+    }
+
     @Override
     public void onTweet(Tweet tweet) {
+        try {
+            log.debug("onTweet start");
+            log.debug("Tweet's text: {}", tweet.getText());
+            sentimentAnalyzer.setInputString(tweet.getText());
+            sentimentAnalyzer.setInputStringProperties();
+            sentimentAnalyzer.analyze();
+            log.debug("tweet: {}, \n polarity: {}", tweet, sentimentAnalyzer.getPolarity());
+            twitterScheduler.getTweets().put(tweet, sentimentAnalyzer.getPolarity());
+            log.debug("onTweet end");
+        } catch (Exception ex) {
+            log.error("error: {}", ex);
+        }
 
-        sentimentAnalyzer.setInputString(tweet.getText());
-        sentimentAnalyzer.analyze();
-        tweets.put(tweet, sentimentAnalyzer.getPolarity());
 
     }
 
@@ -43,13 +62,7 @@ public class SentimentStreamListener implements StreamListener {
 
     @Override
     public void onWarning(StreamWarningEvent warningEvent) {
-
-    }
-
-    @Scheduled(fixedDelay = 10000L)
-    private void cleanTweets() {
-        log.info("Scheduled op, tweets with polarity: {}", tweets);
-        tweets = new HashMap<>();
+        log.warn("Warning: {}", warningEvent.getMessage());
     }
 
     public static final Logger log = LoggerFactory.getLogger(SentimentStreamListener.class);
