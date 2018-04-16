@@ -37,11 +37,13 @@ public class SentimentStreamListener implements StreamListener {
         try {
             log.debug("onTweet start");
             log.debug("Tweet's text: {}", tweet.getText());
-            sentimentAnalyzer.setInputString(tweet.getText());
-            sentimentAnalyzer.setInputStringProperties();
-            sentimentAnalyzer.analyze();
-            log.debug("tweet: {}, \n polarity: {}", tweet, sentimentAnalyzer.getPolarity());
-            twitterScheduler.getTweets().put(tweet, sentimentAnalyzer.getPolarity());
+            if (tweet.getLanguageCode().equalsIgnoreCase("en")) {
+                sentimentAnalyzer.setInputString(tweet.getText());
+                sentimentAnalyzer.setInputStringProperties();
+                sentimentAnalyzer.analyze();
+                log.debug("tweet: {}, \n polarity: {}", tweet, sentimentAnalyzer.getPolarity());
+                twitterScheduler.getTweets().put(tweet, sentimentAnalyzer.getPolarity());
+            }
             log.debug("onTweet end");
         } catch (Exception ex) {
             log.error("error: {}", ex);

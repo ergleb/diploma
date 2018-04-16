@@ -21,9 +21,11 @@ public class ListStreamListener implements StreamListener {
 
     @Override
     public void onTweet(Tweet tweet) {
-        tweets.add(tweet);
-        if (tweets.size() > limit) {
-            tweets.remove(0);
+        if (tweet.getLanguageCode().equalsIgnoreCase("en")) {
+            tweets.add(tweet);
+            if (tweets.size() > limit) {
+                tweets.remove(0);
+            }
         }
     }
 
