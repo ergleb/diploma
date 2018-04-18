@@ -34,7 +34,7 @@ public class HelloController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
         model.addAttribute("friends", friends);
-        return "hello";
+        return "twitterConnected";
     }
 
 }

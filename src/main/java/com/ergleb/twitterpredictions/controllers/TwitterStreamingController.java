@@ -3,13 +3,15 @@ package com.ergleb.twitterpredictions.controllers;
 
 import com.ergleb.twitterpredictions.services.StreamingService;
 import com.ergleb.twitterpredictions.streamlisteners.ListStreamListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.StreamListener;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -31,21 +33,28 @@ public class TwitterStreamingController {
         this.streamingService = streamingService;
     }
 
-    @RequestMapping(value = "/{filter}")
-    public String stream(Model model, @PathVariable String filter) {
+    @RequestMapping("")
+    public String stream(Model model, @RequestParam String filter) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
+        log.debug("filter: {}", filter);
 
-
-        model.addAttribute("filter", filter);
-        List<StreamListener> listeners = streamingService.stream(filter);
-        for (StreamListener listener : listeners) {
-            if (listener instanceof ListStreamListener) {
-                model.addAttribute("tweets", ((ListStreamListener) listener).getTweets());
+        try {
+            model.addAttribute("filter", filter);
+            List<StreamListener> listeners = streamingService.stream(filter);
+            for (StreamListener listener : listeners) {
+                if (listener instanceof ListStreamListener) {
+                    model.addAttribute("tweets", ((ListStreamListener) listener).getTweets());
+                }
             }
+        } catch (Exception ex) {
+            log.error("exc: {}", ex);
         }
+
 
         return "stream";
     }
+
+    public static final Logger log = LoggerFactory.getLogger(TwitterStreamingController.class);
 }
