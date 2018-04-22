@@ -35,8 +35,8 @@ public class SentimentStreamListener implements StreamListener {
     @Override
     public void onTweet(Tweet tweet) {
         try {
-            log.debug("onTweet start");
-            log.debug("Tweet's text: {}", tweet.getText());
+            log.trace("onTweet start");
+            log.trace("Tweet's text: {}", tweet.getText());
             if (tweet.getLanguageCode().equalsIgnoreCase("en")) {
                 sentimentAnalyzer.setInputString(tweet.getText());
                 sentimentAnalyzer.setInputStringProperties();
@@ -44,7 +44,7 @@ public class SentimentStreamListener implements StreamListener {
                 log.debug("tweet: {}, \n polarity: {}", tweet, sentimentAnalyzer.getPolarity());
                 twitterScheduler.getTweets().put(tweet, sentimentAnalyzer.getPolarity());
             }
-            log.debug("onTweet end");
+            log.trace("onTweet end");
         } catch (Exception ex) {
             log.error("error: {}", ex);
         }

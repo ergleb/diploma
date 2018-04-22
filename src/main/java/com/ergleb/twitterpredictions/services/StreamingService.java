@@ -32,7 +32,7 @@ public class StreamingService {
             streamListeners.add(sentimentStreamListener);
             streamListeners.add(new ListStreamListener(10));
             //streamListeners.add(new LogStreamListener());
-            log.info("SentimentSL: {}", sentimentStreamListener);
+            log.debug("SentimentSL: {}", sentimentStreamListener);
             twitter.streamingOperations().filter(filterWords, streamListeners);
             listenersMap.put(filterWords, streamListeners);
             return streamListeners;

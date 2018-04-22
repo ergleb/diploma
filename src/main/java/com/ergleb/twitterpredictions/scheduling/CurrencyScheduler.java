@@ -16,7 +16,7 @@ public class CurrencyScheduler {
         RestTemplate restTemplate = new RestTemplate();
         String price = restTemplate.getForObject(uriPrice, String.class);
 
-        log.info("price: {}", price);
+        log.debug("price: {}", price);
     }
 
     private static final Logger log = LoggerFactory.getLogger(CurrencyScheduler.class);
