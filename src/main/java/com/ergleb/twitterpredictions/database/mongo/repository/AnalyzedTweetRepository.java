@@ -9,5 +9,5 @@ import java.util.List;
 public interface AnalyzedTweetRepository extends MongoRepository<AnalyzedTweet, String> {
     public AnalyzedTweet findById(String id);
 
-    public List<AnalyzedTweet> findByTweetCreatedAtBetween (Date from, Date to);
+    public List<AnalyzedTweet> findByTweetCreatedAtBetween(Date from, Date to);
 }

@@ -1,13 +1,11 @@
 package com.ergleb.twitterpredictions.streamlisteners;
 
 import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
-import com.ergleb.twitterpredictions.services.StreamingService;
 import com.vader.sentiment.analyzer.SentimentAnalyzer;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.twitter.api.StreamDeleteEvent;
 import org.springframework.social.twitter.api.StreamListener;
 import org.springframework.social.twitter.api.StreamWarningEvent;
@@ -28,7 +26,7 @@ public class SentimentStreamListener implements StreamListener {
     private TwitterScheduler twitterScheduler;
 
     @Inject
-    public SentimentStreamListener (TwitterScheduler twitterScheduler) {
+    public SentimentStreamListener(TwitterScheduler twitterScheduler) {
         this.twitterScheduler = twitterScheduler;
     }
 

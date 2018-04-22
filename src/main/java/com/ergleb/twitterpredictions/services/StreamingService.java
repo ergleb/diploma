@@ -2,13 +2,9 @@ package com.ergleb.twitterpredictions.services;
 
 import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
 import com.ergleb.twitterpredictions.streamlisteners.ListStreamListener;
-import com.ergleb.twitterpredictions.streamlisteners.LogStreamListener;
 import com.ergleb.twitterpredictions.streamlisteners.SentimentStreamListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.StreamListener;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
@@ -54,7 +50,7 @@ public class StreamingService {
     private TwitterScheduler twitterScheduler;
 
     @Inject
-    protected StreamingService (Twitter twitter, TwitterScheduler twitterScheduler) {
+    protected StreamingService(Twitter twitter, TwitterScheduler twitterScheduler) {
         this.twitter = twitter;
         this.twitterScheduler = twitterScheduler;
     }
