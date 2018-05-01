@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.StreamListener;
+import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/twitter/stream")
@@ -56,5 +59,12 @@ public class TwitterStreamingController {
         return "stream";
     }
 
-    public static final Logger log = LoggerFactory.getLogger(TwitterStreamingController.class);
+    @RequestMapping("/active")
+    public String activeStreams (Model model) {
+        Map<String, String> streamListeners = streamingService.getListeners();
+        model.addAttribute("streamListeners", streamListeners);
+        return "active";
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(TwitterStreamingController.class);
 }

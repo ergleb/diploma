@@ -3,9 +3,11 @@ package com.ergleb.twitterpredictions.services;
 import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
 import com.ergleb.twitterpredictions.streamlisteners.ListStreamListener;
 import com.ergleb.twitterpredictions.streamlisteners.SentimentStreamListener;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.social.twitter.api.StreamListener;
+import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.Map;
 @Service
 public class StreamingService {
 
+    @Getter
     private Map<String, List<StreamListener>> listenersMap = new HashMap<>();
 
     public List<StreamListener> stream(String filterWords) {
@@ -35,6 +38,23 @@ public class StreamingService {
         } else {
             return listenersMap.get(filterWords);
         }
+    }
+
+    public Map<String, String> getListeners () {
+        Map<String, String> result = new HashMap<>();
+        for (Map.Entry<String, List<StreamListener>> entry: listenersMap.entrySet()) {
+            for (StreamListener listener : entry.getValue()) {
+                if (listener instanceof ListStreamListener) {
+                    List<Tweet> tweets = ((ListStreamListener) listener).getTweets();
+                    String tweetText = "";
+                    if (tweets.size() > 1) {
+                        tweetText = tweets.get(tweets.size() - 1).getText();
+                    }
+                    result.put(entry.getKey(), tweetText);
+                }
+            }
+        }
+        return result;
     }
 
     public List<StreamListener> getListeners(String filter) {

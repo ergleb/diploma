@@ -30,11 +30,12 @@ public class HelloController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
+        return "redirect:/connect/twitterConnected";
+    }
 
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
-        model.addAttribute("friends", friends);
-        return "twitterConnected";
+    @RequestMapping(path = "index", method = RequestMethod.GET)
+    public String index (Model model) {
+        return "connect/twitterConnected";
     }
 
 }

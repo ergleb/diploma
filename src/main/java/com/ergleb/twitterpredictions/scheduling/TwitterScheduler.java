@@ -34,12 +34,17 @@ public class TwitterScheduler {
     @Getter
     private Map<Tweet, Map<String, Float>> tweets = new HashMap<>();
 
-    @Scheduled(fixedDelay = 60000L)
+    @Scheduled(fixedDelay = 5000L)
     private void cleanTweets() {
         log.info("Scheduled op, tweets with polarity: {}", tweets);
         List<AnalyzedTweet> analyzedTweets = tweets.entrySet().stream().map(x -> {
+            Tweet tweet = x.getKey();
             AnalyzedTweet analyzedTweet = new AnalyzedTweet();
-            analyzedTweet.setTweet(x.getKey());
+            analyzedTweet.setTweetId(tweet.getId());
+            analyzedTweet.setText(tweet.getText());
+            analyzedTweet.setHashTags(tweet.getEntities().getHashTags());
+            analyzedTweet.setUserId(tweet.getFromUser());
+            analyzedTweet.setCreatedAt(tweet.getCreatedAt());
             Map<String, Float> polarity = x.getValue();
             analyzedTweet.setPositive(polarity.get(ScoreType.POSITIVE));
             analyzedTweet.setNegative(polarity.get(ScoreType.NEGATIVE));

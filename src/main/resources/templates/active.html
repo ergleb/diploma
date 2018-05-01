@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stream Twitter</title>
+</head>
+<body>
+
+<table>
+    <tr th:each="entry : ${streamListeners}">
+        <td th:text="${entry.key}">key</td>
+        <td th:text="${entry.value}">value</td>
+    </tr>
+</table>
+
+<a href="/index">Home</a>
+
+</body>
+</html>

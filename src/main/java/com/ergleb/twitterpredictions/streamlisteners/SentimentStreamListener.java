@@ -2,6 +2,7 @@ package com.ergleb.twitterpredictions.streamlisteners;
 
 import com.ergleb.twitterpredictions.scheduling.TwitterScheduler;
 import com.vader.sentiment.analyzer.SentimentAnalyzer;
+import com.vader.sentiment.util.ScoreType;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -40,7 +41,9 @@ public class SentimentStreamListener implements StreamListener {
                 sentimentAnalyzer.setInputStringProperties();
                 sentimentAnalyzer.analyze();
                 log.debug("tweet: {}, \n polarity: {}", tweet, sentimentAnalyzer.getPolarity());
-                twitterScheduler.getTweets().put(tweet, sentimentAnalyzer.getPolarity());
+                if (Math.abs(sentimentAnalyzer.getPolarity().get(ScoreType.COMPOUND)) > 0.2) {
+                    twitterScheduler.getTweets().put(tweet, sentimentAnalyzer.getPolarity());
+                }
             }
             log.trace("onTweet end");
         } catch (Exception ex) {
